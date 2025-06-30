@@ -6,6 +6,21 @@ class Meal(models.Model):
     title=models.CharField(max_length=32)
     description=models.TextField(max_length=360)
     
+    
+    def no_of_ratings(self):
+        return len(Rating.objects.filter(meal=self))
+    
+    def avg_ratings(self):
+        num_of_ratings=self.no_of_ratings()
+        sum_of_ratings=0
+        if len(Rating.objects.filter(meal=self)) :
+            
+            for i in Rating.objects.filter(meal=self) :
+                sum_of_ratings+=i.stars
+            return sum_of_ratings/num_of_ratings
+        else:
+            return 0
+    
     def __str__(self):
         return self.title
     
@@ -16,7 +31,7 @@ class Rating(models.Model):
     
     
     def __str__(self):
-        return self.meal.title
+        return f"{self.stars}"
     
     class Meta:
         constraints =[
